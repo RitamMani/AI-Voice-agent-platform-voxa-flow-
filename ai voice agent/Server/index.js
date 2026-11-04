@@ -11,16 +11,15 @@ import billingRouter from "./Routes/billing.route.js"
 
 
 const app = express()
-const privateCors =
-  cors({
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
-    origin: [
-      "http://localhost:5173"
-    ],
-
-    credentials: true
-
-  });
+const privateCors = cors({
+  origin: allowedOrigins,
+  credentials: true
+});
 
   const publicCors =
   cors({
@@ -41,8 +40,9 @@ app.use("/api/user",privateCors , userRouter)
 app.use("/api/billing",privateCors , billingRouter)
 
 app.use("/api/assistant",publicCors , assistantRouter)
-const PORT = process.env.PORT
-app.listen(PORT , ()=>{
-    console.log(`Server Started on Port ${PORT}`)
-    connectDB()
-})
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server Started on Port ${PORT}`);
+    connectDB();
+});
